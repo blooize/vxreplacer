@@ -10,6 +10,6 @@ $ nano .env
 ```
 Start via docker compose:
 ```bash
-§ docker compose up -d
+$ docker compose up -d
 ```
 Logs will be visable inside of the /logs directory.
