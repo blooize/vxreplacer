@@ -1,24 +1,11 @@
-version: '3.8'
-
 services:
   vxtwitter-bot:
     build: .
-    container_name: vxtwitter-bot
+    container_name: vxtwitter-discord-bot
     restart: unless-stopped
     environment:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
+    env_file:
+      - .env
     volumes:
-      # Mount logs directory to persist logs
-      - ./logs:/app/logs
-    # Uncomment the following lines if you want to override the command
-    # command: python main.py
-    
-    # Optional: Add resource limits
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
-        reservations:
-          memory: 128M
-          cpus: '0.25'
+      - ./logs:/root/logs

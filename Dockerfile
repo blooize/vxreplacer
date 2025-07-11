@@ -1,20 +1,41 @@
-# Use Python 3.11 slim image
-FROM python:alpine
+# Use the official Go image as base
+FROM golang:1.24-alpine AS builder
+
 # Set working directory
 WORKDIR /app
 
-# Copy requirements first for better layer caching
-COPY requirements.txt .
+# Install git (needed for go mod download)
+RUN apk add --no-cache git
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy go mod files
+COPY go.mod go.sum ./
 
-# Copy the application code
-COPY main.py .
+# Download dependencies
+RUN go mod download
 
-# Create a non-root user for security
-RUN useradd -m -u 1000 botuser && chown -R botuser:botuser /app
-USER botuser
+# Copy source code
+COPY . .
 
-# Command to run the bot
-CMD ["python", "main.py"]
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+
+# Use a minimal base image
+FROM alpine:latest
+
+# Install ca-certificates for HTTPS requests
+RUN apk --no-cache add ca-certificates
+
+# Set working directory
+WORKDIR /root/
+
+# Copy the binary from builder stage
+COPY --from=builder /app/main .
+
+# Create logs directory
+RUN mkdir -p logs
+
+# Expose port (if needed, though Discord bots don't typically need this)
+# EXPOSE 8080
+
+# Command to run the application
+CMD ["./main"]
