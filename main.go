@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -19,10 +18,10 @@ func main() {
 	}
 	log.SetOutput(file)
 
-	err = godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	// err = godotenv.Load(".env")
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 
 	discord_bot_token := os.Getenv("DISCORD_TOKEN")
 
