@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -18,10 +19,10 @@ func main() {
 	}
 	log.SetOutput(file)
 
-	// err = godotenv.Load(".env")
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
+	err = godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	discord_bot_token := os.Getenv("DISCORD_TOKEN")
 
@@ -84,6 +85,15 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if err != nil {
 				log.Printf("[DISCORD] Error sending reply: %v", err)
 			}
+		}
+		m.Message.Flags = 1 << 2
+		_, err := s.ChannelMessageEditComplex(&discordgo.MessageEdit{
+			Channel: m.ChannelID,
+			ID:      m.Message.ID,
+			Flags:   m.Message.Flags,
+		})
+		if err != nil {
+			log.Printf("[DISCORD] Error editing message flags: %v", err)
 		}
 	}
 }
