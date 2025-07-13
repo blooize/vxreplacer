@@ -1,5 +1,10 @@
 # VX Replacer
-Simple discord bot to automatically replace twitter/x.com links with vxtwitter.com.
+Simple discord bot to automatically replace the following links automatically:
+```
+twitter/x.com -> vxtwitter.com
+bsky.app/.social -> bskx.app
+instagram.com -> ddinstagram.com 
+```
 
 ## Setup
 
